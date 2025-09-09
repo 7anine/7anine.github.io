@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome – Hanine</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="landing">
+  <div class="floating-cards">
+    <div class="card small" style="top:10%; left:15%;">A</div>
+    <div class="card medium" style="top:25%; left:65%;">B</div>
+
+    <!-- Center card (draggable, but only the text is clickable) -->
+    <div class="card center" style="top:40%; left:40%;">
+      <a href="index.html" class="enter-link">Enter</a>
+    </div>
+
+    <div class="card medium" style="top:65%; left:20%;">C</div>
+    <div class="card small" style="top:75%; left:60%;">D</div>
+  </div>
+
+  <script>
+    // Give each card a random rotation to look "scattered"
+    document.querySelectorAll('.card').forEach(card => {
+      const rotation = (Math.random() * 20 - 10); // -10deg to +10deg
+      card.style.transform = `rotate(${rotation}deg)`;
+    });
+
+    // Drag & Drop functionality
+    let activeCard = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousedown', e => {
+        // Prevent starting drag if clicking the link itself
+        if (e.target.tagName.toLowerCase() === 'a') return;
+
+        activeCard = card;
+        offsetX = e.clientX - card.offsetLeft;
+        offsetY = e.clientY - card.offsetTop;
+        card.style.zIndex = 10;
+      });
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (activeCard) {
+        activeCard.style.left = (e.clientX - offsetX) + 'px';
+        activeCard.style.top = (e.clientY - offsetY) + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (activeCard) {
+        activeCard.style.zIndex = 1;
+        activeCard = null;
+      }
+    });
+
+    // Touch support
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('touchstart', e => {
+        if (e.target.tagName.toLowerCase() === 'a') return;
+
+        activeCard = card;
+        const touch = e.touches[0];
+        offsetX = touch.clientX - card.offsetLeft;
+        offsetY = touch.clientY - card.offsetTop;
+        card.style.zIndex = 10;
+      });
+    });
+
+    document.addEventListener('touchmove', e => {
+      if (activeCard) {
+        const touch = e.touches[0];
+        activeCard.style.left = (touch.clientX - offsetX) + 'px';
+        activeCard.style.top = (touch.clientY - offsetY) + 'px';
+      }
+    });
+
+    document.addEventListener('touchend', () => {
+      if (activeCard) {
+        activeCard.style.zIndex = 1;
+        activeCard = null;
+      }
+    });
+  </script>
+</body>
+</html>
